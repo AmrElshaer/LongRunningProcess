@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddSignalR();
 
 // Register application services
 builder.Services.AddSingleton<IStatusTracker, InMemoryStatusTracker>();
@@ -20,6 +21,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Serve static files (for the demo client)
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+// Map SignalR hub
+app.MapHub<JobStatusHub>("/hubs/jobstatus");
 
 var summaries = new[]
 {
