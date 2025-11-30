@@ -8,6 +8,7 @@ public class ImageProcessor(IStatusTracker statusTracker, JobQueue jobQueue, ILo
         {
             try
             {
+                await  Task.Delay(2000, ct);
                 await statusTracker.SetStatusAsync(
                     job.Id,
                     "processing"
@@ -18,13 +19,17 @@ public class ImageProcessor(IStatusTracker statusTracker, JobQueue jobQueue, ILo
                     job.OriginalPath,
                     job.OutputFolder
                 );
-
+                await  Task.Delay(2000, ct);
+                await statusTracker.SetStatusAsync(
+                    job.Id,
+                    "thumbnails_generated"
+                );
                 // Optimize images
                 await OptimizeImagesAsync(
                     job.OriginalPath,
                     job.OutputFolder
                 );
-
+                await Task.Delay(2000, ct);
                 await statusTracker.SetStatusAsync(
                     job.Id,
                     "completed"
